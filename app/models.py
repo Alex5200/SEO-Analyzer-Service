@@ -5,12 +5,11 @@ from typing import Optional
 class AnalyzeRequest(BaseModel):
     url: str
 
-    @field_validator('url')
+    @field_validator('url', mode='before')
     @classmethod
-    def validate_url(cls, v: str) -> str:
-        if not v.startswith(('http://', 'https://')):
-            raise ValueError('URL должен начинаться с http:// или https://')
-        return v
+    def validate_and_normalize_url(cls, v: str) -> str:
+        validated_url = HttpUrl(v)
+        return str(validated_url)
 
 
 class AnalyzeResponse(BaseModel):
