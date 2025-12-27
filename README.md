@@ -10,3 +10,10 @@
 8. app/cache.py - кеш с ttl
 
 ------------
+
+# Запуск
+# Сборка в докер
+docker build -t seo-analyzer .
+
+## Запуск контейнера
+docker run -p 8000:8000 seo-analyzer

@@ -1,21 +1,9 @@
-
-FROM python:3.11-slim
-
-RUN apt-get update && apt-get install -y \
-    wget \
-    gnupg \
-    && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-RUN playwright install chromium --with-deps
-
-COPY . .
-
-EXPOSE 8000
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+playwright==1.49.1
+pydantic==2.10.4
+pytest==8.3.4
+pytest-asyncio==0.25.0
+logging
+cachetools
+httpx<1.0

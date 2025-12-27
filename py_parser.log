@@ -1,0 +1,266 @@
+INFO:root:SEO Analyzer Service запущен
+INFO:root:Получен запрос: https://habr.com/ru/feed/
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/feed/, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/feed/ - No module named 'playwright'
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:Получен запрос: https://habr.com/ru/companies/onlinepatent/articles/981122/
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/onlinepatent/articles/981122/, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/onlinepatent/articles/981122/ - No module named 'playwright'
+INFO:root:Получен запрос: https://habr.com/ru/companies/onlinepatent/articles/981122/
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/onlinepatent/articles/981122/, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/onlinepatent/articles/981122/ - No module named 'playwright'
+INFO:root:Получен запрос: https://habr.com/ru/companies/onlinepatent/articles/981122/
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/onlinepatent/articles/981122/, use_browser=True
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/onlinepatent/articles/981122/ - No module named 'playwright'
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:Получен запрос: https://react.dev/learn/creating-a-react-app
+INFO:root:[PARSER] Начало анализа URL: https://react.dev/learn/creating-a-react-app, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://react.dev/learn/creating-a-react-app - No module named 'playwright'
+INFO:root:Получен запрос: https://react.dev/learn/creating-a-react-app
+INFO:root:[PARSER] Начало анализа URL: https://react.dev/learn/creating-a-react-app, use_browser=True
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://react.dev/learn/creating-a-react-app - No module named 'playwright'
+INFO:root:Получен запрос: https://react.dev/learn/creating-a-react-app
+INFO:root:[PARSER] Начало анализа URL: https://react.dev/learn/creating-a-react-app, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://react.dev/learn/creating-a-react-app - No module named 'playwright'
+INFO:root:Получен запрос: https://react.dev/learn/creating-a-react-app
+INFO:root:[PARSER] Начало анализа URL: https://react.dev/learn/creating-a-react-app, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://react.dev/learn/creating-a-react-app - No module named 'playwright'
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:SEO Analyzer Service запущен
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=True
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=True
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=True
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:Получен запрос: http://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: http://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: http://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:Получен запрос: http://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: http://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: http://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+INFO:root:[PARSER] Начало анализа URL: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g, use_browser=False
+ERROR:root:[PARSER] Критическая ошибка в analyze: ModuleNotFoundError: No module named 'playwright'
+Traceback (most recent call last):
+  File "C:\Users\SahaA\Documents\GitHub\SEO-Analyzer-Service\app\parser.py", line 22, in analyze
+    try:
+    
+ModuleNotFoundError: No module named 'playwright'
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - No module named 'playwright'
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service запущен
+INFO:root:SEO Analyzer Service остановлен
+INFO:root:Получен запрос: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g
+ERROR:root:Неизвестная ошибка: https://habr.com/ru/companies/otus/articles/914262/?ysclid=mjb4vz4nhh358402429g - cannot access local variable 'page' where it is not associated with a value
