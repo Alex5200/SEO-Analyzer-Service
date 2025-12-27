@@ -60,7 +60,7 @@ class TestAnalyzeEndpoint:
         """Тест: таймаут → 504."""
         with patch.object(PageParser, 'analyze', new_callable=AsyncMock) as mock_analyze:
             mock_analyze.side_effect = Exception("Timeout 10000ms exceeded")
-            response = client.post("/api/analyze", json={"url": "https://slow-site.example"})
+            response = client.post("/api/analyze", json={"url": "https://habr.com"})
 
         assert response.status_code == 504
         assert response.json()["error"] == "timeout"
