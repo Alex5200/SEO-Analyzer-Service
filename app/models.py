@@ -13,7 +13,7 @@ class AnalyzeRequest(BaseModel):
 
 
 class AnalyzeResponse(BaseModel):
-    url: str
+    url: str = None
     title: Optional[str] = None
     h1_count: int = 0
     meta_description: Optional[str] = None

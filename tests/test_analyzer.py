@@ -32,11 +32,11 @@ class TestAnalyzeEndpoint:
 
         with patch.object(PageParser, 'analyze', new_callable=AsyncMock) as mock_analyze:
             mock_analyze.return_value = mock_result
-            response = client.post("/api/analyze", json={"url": "https://habr.com"})
+            response = client.post("/api/analyze", json={"url": "https://habr.com/"})
 
         assert response.status_code == 200
         data = response.json()
-        assert data["url"] == "https://habr.com"
+        assert data["url"] == "https://habr.com/"
         assert data["title"] == "Habr - сообщество IT-специалистов"
         assert data["h1_count"] == 1
         assert data["meta_description"] == "Хабр — сообщество IT-специалистов"
