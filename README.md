@@ -43,6 +43,10 @@ docker build -t seo-analyzer .
 
 # Запуск контейнера
 docker run -p 8000:8000 seo-analyzer
+
+
+# or 
+docker build -t my-app . && docker run -p 8000:8000 my-app
 ```
 
 После запуска сервис будет доступен по адресу: [http://localhost:8000](http://localhost:8000)
