@@ -15,8 +15,9 @@ app = FastAPI(
 )
 settings = AppSettings()
 
+
 @app.middleware("http")
-async def log_requests(request: Request, call_next):
+async def log_requests(request: Request, call_next) -> JSONResponse:
     """
     FastAPI middleware for logging requests.
 
@@ -55,7 +56,7 @@ async def root():
     summary="Анализ веб-страницы",
     description="""
     Анализирует веб-страницу по указанному URL и извлекает SEO-метаданные.
-    
+
     Извлекаемые данные:
     - `title` — заголовок страницы из тега `<title>`
     - `h1_count` — количество тегов `<h1>` на странице
@@ -85,7 +86,7 @@ async def root():
     },
     tags=["Анализ"],
 )
-async def analyze_page(request: AnalyzeRequest):
+async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse:
     """
     Анализирует веб-страницу по указанному URL и извлекает SEO-метаданные.
 
@@ -199,6 +200,7 @@ async def not_found_handler(request: Request, exc):
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(
         "main:app",
         host=settings.app_host,
