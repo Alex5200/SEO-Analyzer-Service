@@ -11,3 +11,13 @@ class AppSettings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+        extra="ignore"
+
+
+class CacheSettings(BaseSettings):
+    ttl_cache_seconds: int = Field(300, env="TTL_CACHE_SECONDS")
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+        extra="ignore"
