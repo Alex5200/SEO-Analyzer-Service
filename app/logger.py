@@ -2,6 +2,7 @@
 import logging
 import os
 from pathlib import Path
+import sys
 
 # Путь к папке логов
 LOG_DIR = Path("logs")
@@ -29,3 +30,22 @@ logger.addHandler(file_handler)
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
+# Удаляем все существующие обработчики (на случай повторного вызова)
+for handler in logging.root.handlers[:]:
+    logging.root.removeHandler(handler)
+
+# Создаём форматтер
+formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+
+# Создаём обработчик, пишущий в stdout
+stdout_handler = logging.StreamHandler(sys.stdout)
+stdout_handler.setLevel(logging.DEBUG)
+stdout_handler.setFormatter(formatter)
+
+# Настраиваем корневой логгер
+logging.basicConfig(
+    level=logging.INFO,
+    handlers=[stdout_handler]
+)
