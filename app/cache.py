@@ -1,9 +1,7 @@
 import time
-import logging
+from app.logger import logger
 from typing import Optional, Dict, Any
 from dataclasses import dataclass
-
-logger = logging.getLogger(__name__)
 
 
 @dataclass
