@@ -1,9 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel
-from app.models import AnalyzeResponse
-import logging
-
-logger = logging.getLogger(__name__)
+from app.models.models import AnalyzeResponse
+from app.logger import logger
 
 class ParseResult(AnalyzeResponse):
     pass
