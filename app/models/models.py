@@ -3,7 +3,7 @@ from typing import Optional
 
 
 class AnalyzeRequest(BaseModel):
-    url: str
+    url: str | None = "https://habr.com/"
     @field_validator('url', mode='before')
     @classmethod
     def validate_and_normalize_url(cls, v: str) -> str:
