@@ -11,7 +11,6 @@ app = FastAPI(
     version="1.0.0",
 )
 settings = AppSettings()
-app.include_router(analyze_router)
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next) -> JSONResponse:
@@ -35,6 +34,7 @@ async def log_requests(request: Request, call_next) -> JSONResponse:
 
     return response
 
+app.include_router(analyze_router)
 
 @app.get("/")
 async def root():
