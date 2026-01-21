@@ -5,8 +5,8 @@ from unittest.mock import patch, AsyncMock
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.parser import PageParser, ParseResult
-from app.cache import cache
+from app.services.parser import PageParser, ParseResult
+from app.services.cache import cache
 
 
 @pytest.fixture
@@ -108,7 +108,7 @@ class TestCaching:
         assert mock_analyze.call_count == 2
 
     def test_cache_ttl_unit(self):
-        from app.cache import Cache
+        from app.services.cache import Cache
         cache_instance = Cache(ttl_seconds=1)
         cache_instance.set("key", {"value": 1})
         assert cache_instance.get("key") is not None
