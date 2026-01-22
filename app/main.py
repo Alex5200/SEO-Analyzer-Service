@@ -2,8 +2,9 @@ from fastapi import FastAPI, HTTPException, status, Request
 from fastapi.responses import JSONResponse, RedirectResponse
 from app.config import AppSettings
 from app.logger import logger
-from app.routers.analyze import router as analyze_router
+from app.route.analyze import router as analyze_router
 from datetime import datetime
+from app.services import cache
 
 app = FastAPI(
     title="SEO Analyzer Service",
@@ -47,11 +48,11 @@ async def root():
     return RedirectResponse(url="/docs")
 
 
-@app.delete("/api/cache")
+@app.delete("/api/cache", tags=["cache"])
 async def clear_cache():
     """Очищает кэш. Возвращает сообщение об успешном удалении."""
     cache.clear()
-    logging.info("Кеш очищен")
+    logger.info("Кеш очищен")
     return {"message": "Кеш очищен"}
 
 
@@ -72,7 +73,7 @@ async def not_found_handler(request: Request, exc):
     RedirectResponse
         A redirect response to /docs
     """
-    logging.debug(f"404: {request.url.path} -> /docs")
+    logger.debug(f"404: {request.url.path} -> /docs")
     return RedirectResponse(url="/docs")
 
 
