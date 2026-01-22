@@ -32,7 +32,7 @@ router = APIRouter(prefix="/api/analyze")
                     "example": {
                         "url": "https://example.com",
                         "title": "Example Domain",
-                        "h1_count": 1,
+                        "count_element": 1,
                         "meta_description": "This domain is for examples.",
                         "cached": False,
                     }
@@ -45,7 +45,7 @@ router = APIRouter(prefix="/api/analyze")
     },
     tags=["Анализ"],
 )
-async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse:
+async def analyze_page(request: AnalyzeRequest, element: str) -> AnalyzeResponse:
     """
     Анализирует веб-страницу по указанному URL и извлекает SEO-метаданные.
 
@@ -61,33 +61,33 @@ async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse:
     url = request.url
     logger.info(f"Получен запрос: {url}")
     cache_key = f"{url}"
-    cached_result = cache.get(cache_key)
+    cached_result = cache.get(f"{cache_key}:{element}")
     if cached_result:
         logger.info(f"Результат из кеша: {url}")
         return AnalyzeResponse(
             url=url,
             title=cached_result.get("title"),
-            h1_count=cached_result.get("h1_count", 0),
+            count_element=cached_result.get("count_element", 0),
             meta_description=cached_result.get("meta_description"),
             cached=True,
         )
 
     try:
-        result = await PageParser.analyze(url)
+        result = await PageParser.analyze(url,element_to_parce=element)
 
         response_data = {
             "title": result.title,
-            "h1_count": result.h1_count,
+            "count_element": result.count_element,
             "meta_description": result.meta_description,
         }
 
-        cache.set(cache_key, response_data)
+        cache.set(f"{cache_key}:{element}", response_data)
         logger.debug(f"Результат сохранён в кеш: {url}")
 
         return AnalyzeResponse(
             url=url,
             title=result.title,
-            h1_count=result.h1_count,
+            count_element=result.count_element,
             meta_description=result.meta_description,
             cached=False,
         )
