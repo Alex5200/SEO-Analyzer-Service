@@ -14,10 +14,14 @@ class AnalyzeRequest(BaseModel):
 class AnalyzeResponse(BaseModel):
     url: str = None
     title: Optional[str] = None
-    h1_count: int = 0
+    count_element: int = 0
     meta_description: Optional[str] = None
     cached: bool = False
 
+class ParseResult(BaseModel):
+    title: str = None
+    count_element: int = 0
+    meta_description: Optional[str] = None
 
 class ErrorResponse(BaseModel):
     error: str
