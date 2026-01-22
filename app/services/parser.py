@@ -1,18 +1,15 @@
 from typing import Optional
 from pydantic import BaseModel
-from app.models.models import AnalyzeResponse
+from app.models.models import AnalyzeResponse, ParseResult
 from app.logger import logger
 
-
-class ParseResult(AnalyzeResponse):
-    pass
 
 
 class PageParser:
     REQUEST_TIMEOUT = 30000
 
     @classmethod
-    async def analyze(cls, url: str, use_browser: bool = False) -> ParseResult:
+    async def analyze(cls, url: str, use_browser: bool = False, element_to_parce: str = "h1") -> ParseResult:
         """Анализирует веб-страницу по заданному URL и извлекает ключевые SEO-метаданные.
 
         Метод использует Playwright для загрузки страницы в headless-браузере Chromium.
@@ -43,7 +40,7 @@ class PageParser:
             networkidle — 15 секунд. Браузер запускается в headless-режиме с аргументами,
             совместимыми с Docker-контейнерами.
         """
-        logger.debug(f"[PARSER] Начало анализа URL: {url}, use_browser={use_browser}")
+        logger.debug(f"[PARSER] Начало анализа URL: {url}, use_browser={use_browser}, element_to_parce={element_to_parce}")
 
         try:
             from playwright.async_api import async_playwright
@@ -103,9 +100,9 @@ class PageParser:
                     )
 
                     logger.debug("[PARSER] Подсчёт элементов h1...")
-                    h1_elements = await page.locator("h1").all()
-                    h1_count = len(h1_elements)
-                    logger.debug(f"[PARSER] Найдено h1 элементов: {h1_count}")
+                    elements_to_parced = await page.locator(element_to_parce).all()
+                    elements_to_parce_count = len(elements_to_parced)
+                    logger.debug(f"[PARSER] Найдено {element_to_parce} элементов: {elements_to_parce_count}")
 
                     logger.debug("[PARSER] Извлечение meta description...")
                     meta_tag = page.locator('meta[name="description"]')
@@ -128,7 +125,7 @@ class PageParser:
 
                     result = ParseResult(
                         title=title,
-                        h1_count=h1_count,
+                        count_element=elements_to_parce_count,
                         meta_description=meta_description,
                     )
                     logger.debug(f"[PARSER] Анализ завершён успешно: {result}")
@@ -143,7 +140,6 @@ class PageParser:
                 finally:
                     logger.debug("[PARSER] Закрытие браузера...")
                     await browser.close()
-                    await page.close()
                     logger.debug("[PARSER] Браузер закрыт")
 
         except Exception as e:
