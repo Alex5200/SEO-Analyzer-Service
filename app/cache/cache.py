@@ -1,8 +1,8 @@
 import time
-from app.logger import logger
+from app.logger.logger import logger
 from typing import Optional, Dict, Any
 from dataclasses import dataclass
-from app.config import CacheSettings
+from app.config.config import CacheSettings
 
 
 @dataclass

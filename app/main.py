@@ -1,10 +1,12 @@
-from fastapi import FastAPI, HTTPException, status, Request
+from fastapi import FastAPI, status, Request
 from fastapi.responses import JSONResponse, RedirectResponse
+from starlette.responses import JSONResponse
+
 from app.models.models import AnalyzeRequest, AnalyzeResponse, ErrorResponse
-from app.parser import PageParser
-from app.cache import cache
-from app.config import AppSettings
-from app.logger import logger
+from app.service.parser import PageParser
+from app.cache.cache import cache
+from app.config.config import AppSettings
+from app.logger.logger import logger
 from datetime import datetime
 import logging
 
@@ -49,7 +51,6 @@ async def root():
     """
     return RedirectResponse(url="/docs")
 
-
 @app.post(
     "/api/analyze",
     response_model=AnalyzeResponse,
@@ -86,7 +87,7 @@ async def root():
     },
     tags=["Анализ"],
 )
-async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse:
+async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse | JSONResponse:
     """
     Анализирует веб-страницу по указанному URL и извлекает SEO-метаданные.
 
@@ -100,11 +101,11 @@ async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse:
     Кеширование: результаты кешируются на 5 минут.
     """
     url = request.url
-    logging.info(f"Получен запрос: {url}")
+    logger.info(f"Получен запрос: {url}")
     cache_key = f"{url}"
     cached_result = cache.get(cache_key)
     if cached_result:
-        logging.info(f"Результат из кеша: {url}")
+        logger.info(f"Результат из кеша: {url}")
         return AnalyzeResponse(
             url=url,
             title=cached_result.get("title"),
@@ -123,7 +124,7 @@ async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse:
         }
 
         cache.set(cache_key, response_data)
-        logging.debug(f"Результат сохранён в кеш: {url}")
+        logger.debug(f"Результат сохранён в кеш: {url}")
 
         return AnalyzeResponse(
             url=url,
@@ -137,7 +138,7 @@ async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse:
         error_msg = str(e)
 
         if "Timeout" in error_msg or "timeout" in error_msg:
-            logging.warning(f"Таймаут: {url}")
+            logger.warning(f"Таймаут: {url}")
             return JSONResponse(
                 status_code=status.HTTP_504_GATEWAY_TIMEOUT,
                 content=ErrorResponse(
@@ -148,7 +149,7 @@ async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse:
             )
 
         if "net::ERR_" in error_msg or "Page.goto" in error_msg:
-            logging.warning(f"Ошибка навигации: {url} - {error_msg}")
+            logger.warning(f"Ошибка навигации: {url} - {error_msg}")
             return JSONResponse(
                 status_code=status.HTTP_502_BAD_GATEWAY,
                 content=ErrorResponse(
@@ -158,7 +159,7 @@ async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse:
                 ).model_dump(),
             )
 
-        logging.error(f"Неизвестная ошибка: {url} - {error_msg}")
+        logger.error(f"Неизвестная ошибка: {url} - {error_msg}")
         return JSONResponse(
             status_code=status.HTTP_502_BAD_GATEWAY,
             content=ErrorResponse(

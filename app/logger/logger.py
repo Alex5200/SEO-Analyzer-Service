@@ -1,4 +1,3 @@
-# app/logger.py
 import logging
 import os
 from pathlib import Path
