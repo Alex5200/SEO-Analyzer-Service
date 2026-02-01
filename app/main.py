@@ -2,7 +2,7 @@ from fastapi import FastAPI, status, Request
 from fastapi.responses import JSONResponse, RedirectResponse
 from starlette.responses import JSONResponse
 
-from app.models.models import AnalyzeRequest, AnalyzeResponse, ErrorResponse
+from app.models.models import AnalyzeRequest, AnalyzeResponse, ErrorResponse, AnalyzeRequestContact, AnalyzeResponseContact
 from app.service.parser import PageParser
 from app.cache.cache import cache
 from app.config.config import AppSettings
@@ -168,6 +168,17 @@ async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse | JSONRespons
                 url=url,
             ).model_dump(),
         )
+
+@app.post(path="/api/getContactOnSite", tags=["Анализ"])
+async def analyze_page_getContact(request: AnalyzeRequestContact) -> AnalyzeResponseContact:
+    url = request.url
+    try:
+        result = await PageParser.getContact(url)
+
+        return result
+
+    except Exception as e:
+        logger.error(str(e))
 
 
 @app.delete("/api/cache")
