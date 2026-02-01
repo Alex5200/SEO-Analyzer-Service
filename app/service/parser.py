@@ -1,15 +1,15 @@
-from typing import Optional
 from contextlib import asynccontextmanager
+from pydantic import BaseModel, Field
+import re
 from playwright.async_api import async_playwright, Browser, Page
-
-from app.models.models import AnalyzeResponse
+from typing import Dict, List, Optional
+from app.models.models import AnalyzeResponse, ContactResult
 from app.logger.logger import logger
 
 
 class ParseResult(AnalyzeResponse):
     """Результат парсинга страницы с SEO-метаданными."""
     pass
-
 
 class BrowserConfig:
     """Конфигурация браузера для Playwright."""
@@ -26,6 +26,11 @@ class BrowserConfig:
 
 class PageParser:
     """Парсер веб-страниц для извлечения SEO-метаданных."""
+
+    # Регулярные выражения для поиска контактов
+    EMAIL_PATTERN = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+    # Улучшенный паттерн для телефонов - исключаем пустые совпадения
+    PHONE_PATTERN = r'(?:\+7|8|7)[\s\-]?\(?(\d{3})\)?[\s\-]?(\d{3})[\s\-]?(\d{2})[\s\-]?(\d{2})'
 
     @staticmethod
     async def _detect_spa_framework(page: Page) -> bool:
@@ -91,6 +96,97 @@ class PageParser:
         }
 
     @classmethod
+    async def _find_contacts_on_page(cls, page: Page) -> Dict[str, List[str]]:
+        """Ищет контактную информацию на текущей странице.
+
+        Args:
+            page: Объект страницы Playwright
+
+        Returns:
+            Словарь с ключами 'emails' и 'phones'
+        """
+        logger.debug("[PARSER] Поиск контактов на странице...")
+
+        # Получаем весь текстовый контент страницы
+        content = await page.content()
+
+        # Поиск email
+        emails = re.findall(cls.EMAIL_PATTERN, content)
+        emails = list(set(emails))  # Удаляем дубликаты
+        logger.debug(f"[PARSER] Найдено email: {len(emails)}")
+
+        # Поиск телефонов с улучшенной обработкой
+        phone_matches = re.findall(cls.PHONE_PATTERN, content)
+        phones = []
+
+        for match in phone_matches:
+            # match будет кортежем из групп (xxx, xxx, xx, xx)
+            if isinstance(match, tuple):
+                # Форматируем телефон в читаемый вид
+                phone = f"+7 ({match[0]}) {match[1]}-{match[2]}-{match[3]}"
+                phones.append(phone)
+            elif match:  # если это строка
+                phones.append(match)
+
+        phones = list(set(phones))  # Удаляем дубликаты
+        # Фильтруем пустые строки и слишком короткие номера
+        phones = [p for p in phones if
+                  p and len(p.replace(' ', '').replace('-', '').replace('(', '').replace(')', '')) >= 10]
+
+        logger.debug(f"[PARSER] Найдено телефонов: {len(phones)}")
+
+        return {
+            'emails': emails,
+            'phones': phones
+        }
+
+    @classmethod
+    async def _find_contact_page_link(cls, page: Page) -> Optional[str]:
+        """Ищет ссылку на страницу контактов.
+
+        Args:
+            page: Объект страницы Playwright
+
+        Returns:
+            URL страницы контактов или None
+        """
+        logger.debug("[PARSER] Поиск ссылки на страницу контактов...")
+
+        # Варианты текста для поиска
+        contact_keywords = [
+            "контакты", "контакт", "contact", "contacts",
+            "связаться", "связь", "о нас", "about"
+        ]
+
+        for keyword in contact_keywords:
+            try:
+                # Поиск по ссылкам
+                link = page.get_by_role("link", name=re.compile(keyword, re.IGNORECASE))
+
+                if await link.count() > 0:
+                    href = await link.first.get_attribute('href')
+                    if href:
+                        logger.debug(f"[PARSER] Найдена ссылка на контакты: {href}")
+                        return href
+            except Exception as e:
+                logger.debug(f"[PARSER] Ошибка при поиске по ключу '{keyword}': {e}")
+                continue
+
+        # Если не нашли по роли, пробуем просто по тексту
+        try:
+            link = page.get_by_text(re.compile(r"контакт|contact", re.IGNORECASE)).first
+            if await link.count() > 0:
+                href = await link.get_attribute('href')
+                if href:
+                    logger.debug(f"[PARSER] Найдена ссылка на контакты (по тексту): {href}")
+                    return href
+        except Exception as e:
+            logger.debug(f"[PARSER] Не удалось найти ссылку по тексту: {e}")
+
+        logger.debug("[PARSER] Ссылка на страницу контактов не найдена")
+        return None
+
+    @classmethod
     @asynccontextmanager
     async def _get_browser_page(cls):
         """Контекстный менеджер для управления жизненным циклом браузера.
@@ -119,6 +215,113 @@ class PageParser:
                 logger.debug("[PARSER] Закрытие браузера...")
                 await browser.close()
                 logger.debug("[PARSER] Браузер закрыт")
+
+    @classmethod
+    async def getContact(cls, url: str, use_browser: bool = False) -> ContactResult:
+        """Ищет контактную информацию на сайте.
+
+        Сначала ищет на главной странице. Если не находит, 
+        пытается найти страницу контактов и ищет там.
+
+        Args:
+            url: URL для анализа
+            use_browser: Принудительное использование режима ожидания networkidle
+
+        Returns:
+            ContactResult с найденными email и телефонами
+
+        Raises:
+            Exception: При ошибках загрузки или парсинга страницы
+        """
+        logger.debug(f"[PARSER] Начало поиска контактов на URL: {url}")
+
+        try:
+            async with cls._get_browser_page() as page:
+                logger.debug(f"[PARSER] Переход на URL: {url}")
+
+                await page.goto(
+                    url,
+                    timeout=BrowserConfig.REQUEST_TIMEOUT,
+                    wait_until='domcontentloaded'
+                )
+                logger.debug("[PARSER] Страница загружена")
+
+                # Проверка на SPA и ожидание при необходимости
+                is_spa = await cls._detect_spa_framework(page)
+                should_wait = use_browser or is_spa
+
+                if should_wait:
+                    logger.debug("[PARSER] Ожидание networkidle...")
+                    await page.wait_for_load_state(
+                        'networkidle',
+                        timeout=BrowserConfig.NETWORKIDLE_TIMEOUT
+                    )
+
+                # Первая попытка поиска контактов на главной странице
+                contacts = await cls._find_contacts_on_page(page)
+                current_url = page.url
+
+                # Если контакты найдены, возвращаем результат
+                if contacts['emails'] or contacts['phones']:
+                    logger.debug("[PARSER] Контакты найдены на главной странице")
+                    return ContactResult(
+                        url=current_url,
+                        emails=contacts['emails'],
+                        phones=contacts['phones'],
+                        found_on_main=True
+                    )
+
+                # Если не найдены, ищем страницу контактов
+                logger.debug("[PARSER] Контакты не найдены, ищем страницу контактов...")
+                contact_link = await cls._find_contact_page_link(page)
+
+                if contact_link:
+                    # Переход на страницу контактов
+                    logger.debug(f"[PARSER] Переход на страницу контактов: {contact_link}")
+
+                    # Если ссылка относительная, делаем абсолютной
+                    if not contact_link.startswith('http'):
+                        from urllib.parse import urljoin
+                        contact_link = urljoin(url, contact_link)
+
+                    await page.goto(
+                        contact_link,
+                        timeout=BrowserConfig.REQUEST_TIMEOUT,
+                        wait_until='domcontentloaded'
+                    )
+                    current_url = page.url
+
+                    if should_wait:
+                        await page.wait_for_load_state(
+                            'networkidle',
+                            timeout=BrowserConfig.NETWORKIDLE_TIMEOUT
+                        )
+
+                    # Повторный поиск контактов
+                    contacts = await cls._find_contacts_on_page(page)
+                    logger.debug("[PARSER] Поиск завершен на странице контактов")
+
+                    return ContactResult(
+                        url=current_url,
+                        emails=contacts['emails'],
+                        phones=contacts['phones'],
+                        found_on_main=False
+                    )
+                else:
+                    logger.debug("[PARSER] Страница контактов не найдена")
+                    return ContactResult(
+                        url=current_url,
+                        emails=[],
+                        phones=[],
+                        found_on_main=True
+                    )
+
+        except Exception as e:
+            logger.error(
+                f"[PARSER] Ошибка при поиске контактов {url}: {type(e).__name__}: {str(e)}",
+                exc_debug=True
+            )
+            raise
 
     @classmethod
     async def analyze(cls, url: str, use_browser: bool = False) -> ParseResult:
@@ -174,6 +377,6 @@ class PageParser:
         except Exception as e:
             logger.error(
                 f"[PARSER] Ошибка при анализе {url}: {type(e).__name__}: {str(e)}",
-                exc_debug=True
+                exc_info=True
             )
             raise
