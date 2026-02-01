@@ -19,6 +19,65 @@ seo-analyzer/
     └── cache.py             # Кэширование результатов с TTL
 ```
 
+## 📌 Endpoints
+
+### 1. POST /api/analyze
+**Описание:** Анализирует SEO-метаданные страницы
+
+**Запрос:**
+```json
+{
+  "url": "https://example.com"
+}
+```
+
+**Ответ:**
+```json
+{
+  "url": "https://example.com",
+  "title": "Example Domain",
+  "h1_count": 1,
+  "meta_description": "This domain is for examples.",
+  "cached": false
+}
+```
+
+---
+
+### 2. POST /api/getContactOnSite
+**Описание:** Ищет email и телефоны на сайте
+
+**Запрос:**
+```json
+{
+  "url": "example.com"
+}
+```
+
+**Ответ:**
+```json
+{
+  "url": "https://example.com/contacts",
+  "emails": ["info@example.com", "support@example.com"],
+  "phones": ["+7 (999) 123-45-67", "+7 (495) 000-00-00"],
+  "found_on_main": false
+}
+```
+
+---
+
+### 3. DELETE /api/cache
+**Описание:** Очищает кеш
+
+**Запрос:** Без параметров
+
+**Ответ:**
+```json
+{
+  "message": "Кеш очищен"
+}
+```
+
 ---
 
 ## ▶️ Запуск локально
