@@ -1,6 +1,6 @@
 import re
-from pydantic import BaseModel, HttpUrl, AnyUrl, field_validator, Field
-from typing import Optional, List, Dict
+from pydantic import BaseModel, HttpUrl, field_validator, Field
+from typing import Optional, List
 
 class AnalyzeRequestContact(BaseModel):
     url: str | None = "https://buroremont.ru"

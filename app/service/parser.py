@@ -1,7 +1,6 @@
 from contextlib import asynccontextmanager
-from pydantic import BaseModel, Field
 import re
-from playwright.async_api import async_playwright, Browser, Page
+from playwright.async_api import async_playwright, Page
 from typing import Dict, List, Optional
 from app.models.models import AnalyzeResponse, ContactResult
 from app.logger.logger import logger

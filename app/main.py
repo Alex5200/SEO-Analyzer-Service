@@ -1,7 +1,5 @@
 from fastapi import FastAPI, status, Request
-from fastapi.responses import JSONResponse, RedirectResponse
-from starlette.responses import JSONResponse
-
+from fastapi.responses import RedirectResponse, JSONResponse
 from app.models.models import AnalyzeRequest, AnalyzeResponse, ErrorResponse, AnalyzeRequestContact, AnalyzeResponseContact
 from app.service.parser import PageParser
 from app.cache.cache import cache
