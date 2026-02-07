@@ -1,10 +1,16 @@
+from functools import lru_cache
+
 from fastapi import FastAPI, status, Request
 from fastapi.responses import RedirectResponse, JSONResponse
+
 from app.models.models import AnalyzeRequest, AnalyzeResponse, ErrorResponse, AnalyzeRequestContact, AnalyzeResponseContact
 from app.service.parser import PageParser
 from app.cache.cache import cache
 from app.config.config import AppSettings
 from app.logger.logger import logger
+
+from prometheus_fastapi_instrumentator import Instrumentator
+
 from datetime import datetime
 import logging
 
@@ -167,16 +173,31 @@ async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse | JSONRespons
             ).model_dump(),
         )
 
-@app.post(path="/api/getContactOnSite", tags=["Анализ"])
+
+
+cache_analyze = {}
+@app.post(path="/api/getContactOnSite", tags=["Анализ"], responses={
+    200: {
+        "description": "Успешный парсинг страницы"
+    },
+    400: {"model": ErrorResponse, "description": "Невалидный URL"},
+    502: {"model": ErrorResponse, "description": "Ошибка соединения с сайтом"},
+    504: {"model": ErrorResponse, "description": "Таймаут при загрузке страницы"},
+})
 async def analyze_page_getContact(request: AnalyzeRequestContact) -> AnalyzeResponseContact:
     url = request.url
-    try:
-        result = await PageParser.getContact(url)
+    if url in cache_analyze:
+        logger.info(f"get cache {url}")
+        return cache_analyze[url]
+    else :
+        try:
+            logger.info(f"set cache {url}")
+            result = await PageParser.getContact(url)
+            cache_analyze[url] = result
+            return result
 
-        return result
-
-    except Exception as e:
-        logger.error(str(e))
+        except Exception as e:
+            logger.error(str(e))
 
 
 @app.delete("/api/cache")
@@ -207,6 +228,9 @@ async def not_found_handler(request: Request, exc):
     logging.debug(f"404: {request.url.path} -> /docs")
     return RedirectResponse(url="/docs")
 
+
+
+Instrumentator().instrument(app).expose(app)
 
 if __name__ == "__main__":
     import uvicorn
