@@ -3,8 +3,8 @@ from pydantic import Field
 
 
 class AppSettings(BaseSettings):
-    app_host: str = Field("127.0.0.1", env="APP_HOST")
-    app_port: int = Field(8000, env="APP_PORT")
+    app_host: str = Field("localhost", env="APP_HOST")
+    app_port: int = Field(8080, env="APP_PORT")
     debug: bool = Field(False, env="DEBUG")
 
     class Config:
