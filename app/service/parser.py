@@ -1,7 +1,9 @@
-from contextlib import asynccontextmanager
 import re
-from playwright.async_api import async_playwright, Page
 from typing import Dict, List, Optional
+
+from contextlib import asynccontextmanager
+from playwright.async_api import async_playwright, Page
+
 from app.models.models import AnalyzeResponse, ContactResult
 from app.logger.logger import logger
 
@@ -26,6 +28,7 @@ class BrowserConfig:
 class PageParser:
     """Парсер веб-страниц для извлечения SEO-метаданных."""
 
+    CAHE_GETCONTACT = {}
     # Регулярные выражения для поиска контактов
     EMAIL_PATTERN = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
     # Улучшенный паттерн для телефонов - исключаем пустые совпадения
@@ -232,95 +235,104 @@ class PageParser:
         Raises:
             Exception: При ошибках загрузки или парсинга страницы
         """
-        logger.debug(f"[PARSER] Начало поиска контактов на URL: {url}")
 
-        try:
-            async with cls._get_browser_page() as page:
-                logger.debug(f"[PARSER] Переход на URL: {url}")
-
-                await page.goto(
-                    url,
-                    timeout=BrowserConfig.REQUEST_TIMEOUT,
-                    wait_until='domcontentloaded'
-                )
-                logger.debug("[PARSER] Страница загружена")
-
-                # Проверка на SPA и ожидание при необходимости
-                is_spa = await cls._detect_spa_framework(page)
-                should_wait = use_browser or is_spa
-
-                if should_wait:
-                    logger.debug("[PARSER] Ожидание networkidle...")
-                    await page.wait_for_load_state(
-                        'networkidle',
-                        timeout=BrowserConfig.NETWORKIDLE_TIMEOUT
-                    )
-
-                # Первая попытка поиска контактов на главной странице
-                contacts = await cls._find_contacts_on_page(page)
-                current_url = page.url
-
-                # Если контакты найдены, возвращаем результат
-                if contacts['emails'] or contacts['phones']:
-                    logger.debug("[PARSER] Контакты найдены на главной странице")
-                    return ContactResult(
-                        url=current_url,
-                        emails=contacts['emails'],
-                        phones=contacts['phones'],
-                        found_on_main=True
-                    )
-
-                # Если не найдены, ищем страницу контактов
-                logger.debug("[PARSER] Контакты не найдены, ищем страницу контактов...")
-                contact_link = await cls._find_contact_page_link(page)
-
-                if contact_link:
-                    # Переход на страницу контактов
-                    logger.debug(f"[PARSER] Переход на страницу контактов: {contact_link}")
-
-                    # Если ссылка относительная, делаем абсолютной
-                    if not contact_link.startswith('http'):
-                        from urllib.parse import urljoin
-                        contact_link = urljoin(url, contact_link)
+        logger.info(f"[PARSER] Начало поиска контактов на URL: {url}")
+        if url in cls.CAHE_GETCONTACT:
+            logger.info(f"[PARSER] set cache {url} : {cls.CAHE_GETCONTACT}")
+            return cls.CAHE_GETCONTACT[url]
+        else:
+            try:
+                async with cls._get_browser_page() as page:
+                    logger.info(f"[PARSER] Переход на URL: {url}")
 
                     await page.goto(
-                        contact_link,
+                        url,
                         timeout=BrowserConfig.REQUEST_TIMEOUT,
                         wait_until='domcontentloaded'
                     )
-                    current_url = page.url
+                    logger.info("[PARSER] Страница загружена")
+
+                    # Проверка на SPA и ожидание при необходимости
+                    is_spa = await cls._detect_spa_framework(page)
+                    should_wait = use_browser or is_spa
 
                     if should_wait:
+                        logger.info("[PARSER] Ожидание networkidle...")
                         await page.wait_for_load_state(
                             'networkidle',
                             timeout=BrowserConfig.NETWORKIDLE_TIMEOUT
                         )
 
-                    # Повторный поиск контактов
+                    # Первая попытка поиска контактов на главной странице
                     contacts = await cls._find_contacts_on_page(page)
-                    logger.debug("[PARSER] Поиск завершен на странице контактов")
+                    current_url = page.url
 
-                    return ContactResult(
-                        url=current_url,
-                        emails=contacts['emails'],
-                        phones=contacts['phones'],
-                        found_on_main=False
-                    )
-                else:
-                    logger.debug("[PARSER] Страница контактов не найдена")
-                    return ContactResult(
-                        url=current_url,
-                        emails=[],
-                        phones=[],
-                        found_on_main=True
-                    )
+                    # Если контакты найдены, возвращаем результат
+                    if contacts['emails'] or contacts['phones']:
+                        logger.info("[PARSER] Контакты найдены на главной странице")
+                        result = ContactResult(
+                            url=current_url,
+                            emails=contacts['emails'],
+                            phones=contacts['phones'],
+                            found_on_main=True
+                        )
+                        cls.CAHE_GETCONTACT[url] = result
+                        logger.info(f"cache {url} : {cls.CAHE_GETCONTACT} ")
+                        return result
 
-        except Exception as e:
-            logger.error(
-                f"[PARSER] Ошибка при поиске контактов {url}: {type(e).__name__}: {str(e)}",
-                exc_debug=True
-            )
-            raise
+                    # Если не найдены, ищем страницу контактов
+                    logger.info("[PARSER] Контакты не найдены, ищем страницу контактов...")
+                    contact_link = await cls._find_contact_page_link(page)
+
+                    if contact_link:
+                        # Переход на страницу контактов
+                        logger.debug(f"[PARSER] Переход на страницу контактов: {contact_link}")
+
+                        # Если ссылка относительная, делаем абсолютной
+                        if not contact_link.startswith('http'):
+                            from urllib.parse import urljoin
+                            contact_link = urljoin(url, contact_link)
+
+                        await page.goto(
+                            contact_link,
+                            timeout=BrowserConfig.REQUEST_TIMEOUT,
+                            wait_until='domcontentloaded'
+                        )
+                        current_url = page.url
+
+                        if should_wait:
+                            await page.wait_for_load_state(
+                                'networkidle',
+                                timeout=BrowserConfig.NETWORKIDLE_TIMEOUT
+                            )
+
+                        # Повторный поиск контактов
+                        contacts = await cls._find_contacts_on_page(page)
+                        logger.info("[PARSER] Поиск завершен на странице контактов")
+                        result = ContactResult(
+                            url=current_url,
+                            emails=contacts['emails'],
+                            phones=contacts['phones'],
+                            found_on_main=False
+                        )
+                        cls.CAHE_GETCONTACT[url] = result
+                        return result
+                    else:
+                        logger.info("[PARSER] Страница контактов не найдена")
+                        return ContactResult(
+                            url=current_url,
+                            emails=[],
+                            phones=[],
+                            found_on_main=True
+                        )
+
+            except Exception as e:
+                logger.error(
+                    f"[PARSER] Ошибка при поиске контактов {url}: {type(e).__name__}: {str(e)}",
+                    exc_debug=True
+                )
+                return e
+
 
     @classmethod
     async def analyze(cls, url: str, use_browser: bool = False) -> ParseResult:

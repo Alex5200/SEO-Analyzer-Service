@@ -175,7 +175,6 @@ async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse | JSONRespons
 
 
 
-cache_analyze = {}
 @app.post(path="/api/getContactOnSite", tags=["Анализ"], responses={
     200: {
         "description": "Успешный парсинг страницы"
@@ -186,18 +185,13 @@ cache_analyze = {}
 })
 async def analyze_page_getContact(request: AnalyzeRequestContact) -> AnalyzeResponseContact:
     url = request.url
-    if url in cache_analyze:
-        logger.info(f"get cache {url}")
-        return cache_analyze[url]
-    else :
-        try:
-            logger.info(f"set cache {url}")
-            result = await PageParser.getContact(url)
-            cache_analyze[url] = result
-            return result
+    try:
+        logger.info(f"set cache {url}")
+        result = await PageParser.getContact(url)
+        return result
 
-        except Exception as e:
-            logger.error(str(e))
+    except Exception as e:
+        logger.error(str(e))
 
 
 @app.delete("/api/cache")
