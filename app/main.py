@@ -1,9 +1,13 @@
-from functools import lru_cache
-
 from fastapi import FastAPI, status, Request
 from fastapi.responses import RedirectResponse, JSONResponse
 
-from app.models.models import AnalyzeRequest, AnalyzeResponse, ErrorResponse, AnalyzeRequestContact, AnalyzeResponseContact
+from app.models.models import (
+    AnalyzeRequest,
+    AnalyzeResponse,
+    ErrorResponse,
+    AnalyzeRequestContact,
+    AnalyzeResponseContact,
+)
 from app.service.parser import PageParser
 from app.cache.cache import cache
 from app.config.config import AppSettings
@@ -54,6 +58,7 @@ async def root():
         RedirectResponse: redirect to /docs
     """
     return RedirectResponse(url="/docs")
+
 
 @app.post(
     "/api/analyze",
@@ -174,16 +179,19 @@ async def analyze_page(request: AnalyzeRequest) -> AnalyzeResponse | JSONRespons
         )
 
 
-
-@app.post(path="/api/getContactOnSite", tags=["Анализ"], responses={
-    200: {
-        "description": "Успешный парсинг страницы"
+@app.post(
+    path="/api/getContactOnSite",
+    tags=["Анализ"],
+    responses={
+        200: {"description": "Успешный парсинг страницы"},
+        400: {"model": ErrorResponse, "description": "Невалидный URL"},
+        502: {"model": ErrorResponse, "description": "Ошибка соединения с сайтом"},
+        504: {"model": ErrorResponse, "description": "Таймаут при загрузке страницы"},
     },
-    400: {"model": ErrorResponse, "description": "Невалидный URL"},
-    502: {"model": ErrorResponse, "description": "Ошибка соединения с сайтом"},
-    504: {"model": ErrorResponse, "description": "Таймаут при загрузке страницы"},
-})
-async def analyze_page_getContact(request: AnalyzeRequestContact) -> AnalyzeResponseContact:
+)
+async def analyze_page_getContact(
+    request: AnalyzeRequestContact,
+) -> AnalyzeResponseContact:
     url = request.url
     try:
         logger.info(f"set cache {url}")
@@ -221,7 +229,6 @@ async def not_found_handler(request: Request, exc):
     """
     logging.debug(f"404: {request.url.path} -> /docs")
     return RedirectResponse(url="/docs")
-
 
 
 Instrumentator().instrument(app).expose(app)

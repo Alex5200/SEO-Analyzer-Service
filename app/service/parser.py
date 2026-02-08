@@ -10,18 +10,21 @@ from app.logger.logger import logger
 
 class ParseResult(AnalyzeResponse):
     """Результат парсинга страницы с SEO-метаданными."""
+
     pass
+
 
 class BrowserConfig:
     """Конфигурация браузера для Playwright."""
+
     REQUEST_TIMEOUT = 30000
     NETWORKIDLE_TIMEOUT = 15000
-    USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     LAUNCH_ARGS = [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
     ]
 
 
@@ -30,9 +33,9 @@ class PageParser:
 
     CAHE_GETCONTACT = {}
     # Регулярные выражения для поиска контактов
-    EMAIL_PATTERN = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+    EMAIL_PATTERN = r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
     # Улучшенный паттерн для телефонов - исключаем пустые совпадения
-    PHONE_PATTERN = r'(?:\+7|8|7)[\s\-]?\(?(\d{3})\)?[\s\-]?(\d{3})[\s\-]?(\d{2})[\s\-]?(\d{2})'
+    PHONE_PATTERN = r"(?:\+7|8|7)[\s\-]?\(?(\d{3})\)?[\s\-]?(\d{3})[\s\-]?(\d{2})[\s\-]?(\d{2})"
 
     @staticmethod
     async def _detect_spa_framework(page: Page) -> bool:
@@ -49,7 +52,7 @@ class PageParser:
         checks = [
             "typeof React !== 'undefined'",
             "typeof Vue !== 'undefined'",
-            "typeof ng !== 'undefined'"
+            "typeof ng !== 'undefined'",
         ]
 
         for check in checks:
@@ -77,7 +80,7 @@ class PageParser:
         logger.debug(f"[PARSER] Title: {title[:100] if title else 'None'}...")
 
         # Подсчет h1
-        h1_count = await page.locator('h1').count()
+        h1_count = await page.locator("h1").count()
         logger.debug(f"[PARSER] Найдено h1: {h1_count}")
 
         # Извлечение meta description
@@ -85,16 +88,18 @@ class PageParser:
         meta_tag = page.locator('meta[name="description"]')
 
         if await meta_tag.count() > 0:
-            content = await meta_tag.first.get_attribute('content')
+            content = await meta_tag.first.get_attribute("content")
             meta_description = content.strip() if content else None
-            logger.debug(f"[PARSER] Meta description: {meta_description[:100] if meta_description else 'None'}...")
+            logger.debug(
+                f"[PARSER] Meta description: {meta_description[:100] if meta_description else 'None'}..."
+            )
         else:
             logger.debug("[PARSER] Meta description не найден")
 
         return {
-            'title': title,
-            'h1_count': h1_count,
-            'meta_description': meta_description
+            "title": title,
+            "h1_count": h1_count,
+            "meta_description": meta_description,
         }
 
     @classmethod
@@ -132,15 +137,16 @@ class PageParser:
 
         phones = list(set(phones))  # Удаляем дубликаты
         # Фильтруем пустые строки и слишком короткие номера
-        phones = [p for p in phones if
-                  p and len(p.replace(' ', '').replace('-', '').replace('(', '').replace(')', '')) >= 10]
+        phones = [
+            p
+            for p in phones
+            if p
+            and len(p.replace(" ", "").replace("-", "").replace("(", "").replace(")", "")) >= 10
+        ]
 
         logger.debug(f"[PARSER] Найдено телефонов: {len(phones)}")
 
-        return {
-            'emails': emails,
-            'phones': phones
-        }
+        return {"emails": emails, "phones": phones}
 
     @classmethod
     async def _find_contact_page_link(cls, page: Page) -> Optional[str]:
@@ -156,8 +162,14 @@ class PageParser:
 
         # Варианты текста для поиска
         contact_keywords = [
-            "контакты", "контакт", "contact", "contacts",
-            "связаться", "связь", "о нас", "about"
+            "контакты",
+            "контакт",
+            "contact",
+            "contacts",
+            "связаться",
+            "связь",
+            "о нас",
+            "about",
         ]
 
         for keyword in contact_keywords:
@@ -166,7 +178,7 @@ class PageParser:
                 link = page.get_by_role("link", name=re.compile(keyword, re.IGNORECASE))
 
                 if await link.count() > 0:
-                    href = await link.first.get_attribute('href')
+                    href = await link.first.get_attribute("href")
                     if href:
                         logger.debug(f"[PARSER] Найдена ссылка на контакты: {href}")
                         return href
@@ -178,7 +190,7 @@ class PageParser:
         try:
             link = page.get_by_text(re.compile(r"контакт|contact", re.IGNORECASE)).first
             if await link.count() > 0:
-                href = await link.get_attribute('href')
+                href = await link.get_attribute("href")
                 if href:
                     logger.debug(f"[PARSER] Найдена ссылка на контакты (по тексту): {href}")
                     return href
@@ -202,8 +214,7 @@ class PageParser:
             logger.debug("[PARSER] Запуск браузера Chromium...")
 
             browser = await playwright.chromium.launch(
-                headless=True,
-                args=BrowserConfig.LAUNCH_ARGS
+                headless=True, args=BrowserConfig.LAUNCH_ARGS
             )
 
             try:
@@ -222,7 +233,7 @@ class PageParser:
     async def getContact(cls, url: str, use_browser: bool = False) -> ContactResult:
         """Ищет контактную информацию на сайте.
 
-        Сначала ищет на главной странице. Если не находит, 
+        Сначала ищет на главной странице. Если не находит,
         пытается найти страницу контактов и ищет там.
 
         Args:
@@ -248,7 +259,7 @@ class PageParser:
                     await page.goto(
                         url,
                         timeout=BrowserConfig.REQUEST_TIMEOUT,
-                        wait_until='domcontentloaded'
+                        wait_until="domcontentloaded",
                     )
                     logger.info("[PARSER] Страница загружена")
 
@@ -259,8 +270,7 @@ class PageParser:
                     if should_wait:
                         logger.info("[PARSER] Ожидание networkidle...")
                         await page.wait_for_load_state(
-                            'networkidle',
-                            timeout=BrowserConfig.NETWORKIDLE_TIMEOUT
+                            "networkidle", timeout=BrowserConfig.NETWORKIDLE_TIMEOUT
                         )
 
                     # Первая попытка поиска контактов на главной странице
@@ -268,13 +278,13 @@ class PageParser:
                     current_url = page.url
 
                     # Если контакты найдены, возвращаем результат
-                    if contacts['emails'] or contacts['phones']:
+                    if contacts["emails"] or contacts["phones"]:
                         logger.info("[PARSER] Контакты найдены на главной странице")
                         result = ContactResult(
                             url=current_url,
-                            emails=contacts['emails'],
-                            phones=contacts['phones'],
-                            found_on_main=True
+                            emails=contacts["emails"],
+                            phones=contacts["phones"],
+                            found_on_main=True,
                         )
                         cls.CAHE_GETCONTACT[url] = result
                         logger.info(f"cache {url} : {cls.CAHE_GETCONTACT} ")
@@ -289,21 +299,21 @@ class PageParser:
                         logger.debug(f"[PARSER] Переход на страницу контактов: {contact_link}")
 
                         # Если ссылка относительная, делаем абсолютной
-                        if not contact_link.startswith('http'):
+                        if not contact_link.startswith("http"):
                             from urllib.parse import urljoin
+
                             contact_link = urljoin(url, contact_link)
 
                         await page.goto(
                             contact_link,
                             timeout=BrowserConfig.REQUEST_TIMEOUT,
-                            wait_until='domcontentloaded'
+                            wait_until="domcontentloaded",
                         )
                         current_url = page.url
 
                         if should_wait:
                             await page.wait_for_load_state(
-                                'networkidle',
-                                timeout=BrowserConfig.NETWORKIDLE_TIMEOUT
+                                "networkidle", timeout=BrowserConfig.NETWORKIDLE_TIMEOUT
                             )
 
                         # Повторный поиск контактов
@@ -311,28 +321,24 @@ class PageParser:
                         logger.info("[PARSER] Поиск завершен на странице контактов")
                         result = ContactResult(
                             url=current_url,
-                            emails=contacts['emails'],
-                            phones=contacts['phones'],
-                            found_on_main=False
+                            emails=contacts["emails"],
+                            phones=contacts["phones"],
+                            found_on_main=False,
                         )
                         cls.CAHE_GETCONTACT[url] = result
                         return result
                     else:
                         logger.info("[PARSER] Страница контактов не найдена")
                         return ContactResult(
-                            url=current_url,
-                            emails=[],
-                            phones=[],
-                            found_on_main=True
+                            url=current_url, emails=[], phones=[], found_on_main=True
                         )
 
             except Exception as e:
                 logger.error(
                     f"[PARSER] Ошибка при поиске контактов {url}: {type(e).__name__}: {str(e)}",
-                    exc_debug=True
+                    exc_debug=True,
                 )
                 return e
-
 
     @classmethod
     async def analyze(cls, url: str, use_browser: bool = False) -> ParseResult:
@@ -361,7 +367,7 @@ class PageParser:
                 await page.goto(
                     url,
                     timeout=BrowserConfig.REQUEST_TIMEOUT,
-                    wait_until='domcontentloaded'
+                    wait_until="domcontentloaded",
                 )
                 logger.debug("[PARSER] Страница загружена (domcontentloaded)")
 
@@ -372,8 +378,7 @@ class PageParser:
                 if should_wait:
                     logger.debug("[PARSER] Ожидание networkidle...")
                     await page.wait_for_load_state(
-                        'networkidle',
-                        timeout=BrowserConfig.NETWORKIDLE_TIMEOUT
+                        "networkidle", timeout=BrowserConfig.NETWORKIDLE_TIMEOUT
                     )
                     logger.debug("[PARSER] Динамический контент загружен")
 
@@ -388,6 +393,6 @@ class PageParser:
         except Exception as e:
             logger.error(
                 f"[PARSER] Ошибка при анализе {url}: {type(e).__name__}: {str(e)}",
-                exc_info=True
+                exc_info=True,
             )
             raise

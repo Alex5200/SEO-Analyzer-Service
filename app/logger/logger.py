@@ -10,9 +10,7 @@ LOG_DIR.mkdir(exist_ok=True)  # создаёт папку, если не сущ�
 LOG_FILE = LOG_DIR / "app.log"
 
 # Создаём форматтер
-formatter = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 # Настраиваем файловый хендлер
 file_handler = logging.FileHandler(LOG_FILE, encoding="utf-8")
@@ -33,9 +31,7 @@ for handler in logging.root.handlers[:]:
     logging.root.removeHandler(handler)
 
 # Создаём форматтер
-formatter = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 # Создаём обработчик, пишущий в stdout
 stdout_handler = logging.StreamHandler(sys.stdout)
@@ -43,7 +39,4 @@ stdout_handler.setLevel(logging.DEBUG)
 stdout_handler.setFormatter(formatter)
 
 # Настраиваем корневой логгер
-logging.basicConfig(
-    level=logging.INFO,
-    handlers=[stdout_handler]
-)
+logging.basicConfig(level=logging.INFO, handlers=[stdout_handler])

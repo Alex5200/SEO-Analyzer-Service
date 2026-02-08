@@ -10,7 +10,7 @@ class AppSettings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
-        extra="ignore"
+        extra = "ignore"
 
 
 class CacheSettings(BaseSettings):
@@ -19,4 +19,4 @@ class CacheSettings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
-        extra="ignore"
+        extra = "ignore"

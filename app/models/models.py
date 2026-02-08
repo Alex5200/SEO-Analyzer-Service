@@ -2,20 +2,22 @@ import re
 from pydantic import BaseModel, HttpUrl, field_validator, Field
 from typing import Optional, List
 
+
 class AnalyzeRequestContact(BaseModel):
     url: str | None = "https://buroremont.ru"
-    @field_validator('url')
+
+    @field_validator("url")
     @classmethod
     def validate_url(cls, v: str) -> str:
         """Валидация URL с автоматическим добавлением протокола"""
         # Если нет протокола, добавляем https://
-        if not v.startswith(('http://', 'https://')):
-            v = f'https://{v}'
+        if not v.startswith(("http://", "https://")):
+            v = f"https://{v}"
 
         # Простая проверка формата URL
-        url_pattern = r'^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/.*)?$'
+        url_pattern = r"^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/.*)?$"
         if not re.match(url_pattern, v):
-            raise ValueError(f'Некорректный URL: {v}')
+            raise ValueError(f"Некорректный URL: {v}")
 
         return v
 
@@ -28,7 +30,8 @@ class AnalyzeResponseContact(BaseModel):
 
 class AnalyzeRequest(BaseModel):
     url: str | None = "https://habr.com/"
-    @field_validator('url', mode='before')
+
+    @field_validator("url", mode="before")
     @classmethod
     def validate_and_normalize_url(cls, v: str) -> str:
         validated_url = HttpUrl(v)
@@ -51,6 +54,7 @@ class ErrorResponse(BaseModel):
 
 class ContactResult(BaseModel):
     """Результат поиска контактной информации."""
+
     url: str = Field(..., description="URL страницы, где производился поиск")
     emails: List[str] = Field(default_factory=list, description="Найденные email адреса")
     phones: List[str] = Field(default_factory=list, description="Найденные телефоны")

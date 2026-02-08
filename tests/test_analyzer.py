@@ -22,15 +22,14 @@ def clear_cache():
 
 
 class TestAnalyzeEndpoint:
-
     def test_analyze_success(self, client):
         mock_result = ParseResult(
             title="Habr - сообщество IT-специалистов",
             h1_count=1,
-            meta_description="Хабр — сообщество IT-специалистов"
+            meta_description="Хабр — сообщество IT-специалистов",
         )
 
-        with patch.object(PageParser, 'analyze', new_callable=AsyncMock) as mock_analyze:
+        with patch.object(PageParser, "analyze", new_callable=AsyncMock) as mock_analyze:
             mock_analyze.return_value = mock_result
             response = client.post("/api/analyze", json={"url": "https://habr.com/"})
 
@@ -49,7 +48,7 @@ class TestAnalyzeEndpoint:
 
     def test_analyze_navigation_error(self, client):
         """Тест: ошибка навигации → 502."""
-        with patch.object(PageParser, 'analyze', new_callable=AsyncMock) as mock_analyze:
+        with patch.object(PageParser, "analyze", new_callable=AsyncMock) as mock_analyze:
             mock_analyze.side_effect = Exception("net::ERR_NAME_NOT_RESOLVED")
             response = client.post("/api/analyze", json={"url": "https://nonexistent-site.invalid"})
 
@@ -58,7 +57,7 @@ class TestAnalyzeEndpoint:
 
     def test_analyze_timeout(self, client):
         """Тест: таймаут → 504."""
-        with patch.object(PageParser, 'analyze', new_callable=AsyncMock) as mock_analyze:
+        with patch.object(PageParser, "analyze", new_callable=AsyncMock) as mock_analyze:
             mock_analyze.side_effect = Exception("Timeout 10000ms exceeded")
             response = client.post("/api/analyze", json={"url": "https://habr.com"})
 
@@ -68,7 +67,7 @@ class TestAnalyzeEndpoint:
     def test_analyze_without_h1(self, client):
         """Тест: страница без h1 и meta description."""
         mock_result = ParseResult(title="Страница без H1", h1_count=0, meta_description=None)
-        with patch.object(PageParser, 'analyze', new_callable=AsyncMock) as mock_analyze:
+        with patch.object(PageParser, "analyze", new_callable=AsyncMock) as mock_analyze:
             mock_analyze.return_value = mock_result
             response = client.post("/api/analyze", json={"url": "https://example.com"})
 
@@ -80,10 +79,9 @@ class TestAnalyzeEndpoint:
 
 
 class TestCaching:
-
     def test_cache_hit(self, client):
         mock_result = ParseResult(title="Cached Page", h1_count=0, meta_description=None)
-        with patch.object(PageParser, 'analyze', new_callable=AsyncMock) as mock_analyze:
+        with patch.object(PageParser, "analyze", new_callable=AsyncMock) as mock_analyze:
             mock_analyze.return_value = mock_result
             r1 = client.post("/api/analyze", json={"url": "https://example.com"})
             r2 = client.post("/api/analyze", json={"url": "https://example.com"})
@@ -96,7 +94,7 @@ class TestCaching:
         mock_result1 = ParseResult(title="Site A", h1_count=1, meta_description="A")
         mock_result2 = ParseResult(title="Site B", h1_count=2, meta_description="B")
 
-        with patch.object(PageParser, 'analyze', new_callable=AsyncMock) as mock_analyze:
+        with patch.object(PageParser, "analyze", new_callable=AsyncMock) as mock_analyze:
             mock_analyze.return_value = mock_result1
             r1 = client.post("/api/analyze", json={"url": "https://example.com"})
 
@@ -109,6 +107,7 @@ class TestCaching:
 
     def test_cache_ttl_unit(self):
         from app.cache.cache import Cache
+
         cache_instance = Cache(ttl_seconds=1)
         cache_instance.set("key", {"value": 1})
         assert cache_instance.get("key") is not None
